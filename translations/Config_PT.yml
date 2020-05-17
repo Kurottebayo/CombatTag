@@ -6,6 +6,7 @@
 ############################################################################
 ## Variables: 
 ##    - <player>: Return a player's name, can be null if the event is non-related to a player
+##    - <tag-cooldown>: Return the current time of the user tag related to the event. Can be between -1 and the defined tag number in config.yml
 # 
 # Plugin Prefix
 # 

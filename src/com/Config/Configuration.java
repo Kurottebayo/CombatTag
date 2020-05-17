@@ -1,30 +1,22 @@
 package com.Config;
 
 import com.Constants.Permissions;
-import com.main;
-import kuro.TextFiles;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Vector;
 
-import static kuro.Parse.tryParseBoolean;
-import static kuro.Parse.tryParseInt;
 import static kuro.Yaml.*;
+import static com.Constants.Paths.*;
 
 public class Configuration {
-
-    private static final String config = "plugins\\CombatTag\\Config.yml";
-    private static final String messages = "plugins\\CombatTag\\Messages.yml";
 
     public static void main(String[] args){
         loadConfiguration();
     }
-
 
     /**
      *
@@ -61,6 +53,7 @@ public class Configuration {
         header.add("## Variables: ");
         header.add("##    - <player>: Return a player's name, can be null if the event is non-related to a player");
         header.add("##    - <tag-cooldown>: Return the current time of the user tag related to the event. Can be between -1 and the defined tag number in config.yml");
+        header.add(" ");
         setHeader(header, config);
         addNode("Prefix", "&9CombatTag > ", config);
         setComment("Prefix", " ", config);
@@ -107,6 +100,7 @@ public class Configuration {
         addComment("Whitelist Commands", " ", config, AUTOINDENT);
         Bukkit.getConsoleSender().sendMessage("§9CombatTag> §aConfig.yml created!");
     }
+
     @SuppressWarnings("all")
     public static void loadConfiguration() {
         Runnable run = () -> {
@@ -127,6 +121,7 @@ public class Configuration {
         };
         new Thread(run).start();
     }
+
     private static boolean configurationExists(){ return Files.exists(Paths.get(config)); }
 
     public static String getPrefix() { return prefix; }
@@ -259,4 +254,5 @@ public class Configuration {
     public static String getMissingPermissionsMessage() { return missingPermissions; }
 
     public static String getOnlyPlayerMessage() { return onlyPlayer; }
+
 }

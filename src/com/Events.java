@@ -72,7 +72,7 @@ public class Events implements Listener {
             tag.setLoggedOut(true);
             Data.addLoggedOut(player,tag);
         }
-        if(!Configuration.getBypass() || !player.hasPermission(Permissions.BYPASS)) {
+        if(!Configuration.getBypass() || !player.hasPermission(Permissions.BYPASS) || !player.hasPermission(Permissions.ALL)) {
             if (Configuration.isBroadcast() && !Configuration.getBroadcastMessage().equals("")) {
                 String message = replaceColors(Configuration.getPrefix() + Configuration.getBroadcastMessage());
                 message = message.replace("<player>", player.getName());
@@ -115,7 +115,7 @@ public class Events implements Listener {
             if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
                 Player victim = (Player) event.getEntity();
                 Player attacker = (Player) event.getDamager();
-                if (!Configuration.getBypass() || !victim.hasPermission(Permissions.BYPASS)) {
+                if (!Configuration.getBypass() || !victim.hasPermission(Permissions.BYPASS) || !victim.hasPermission(Permissions.ALL)) {
                     if (getPlayerTag(victim) == -1) {
                         setPlayerTag(victim, getCooldown());
                         String message = replaceColors(getPrefix() + getTagMessage());
@@ -125,7 +125,7 @@ public class Events implements Listener {
                         RemoveTag.createPlayerThread(victim.getName());
                     } else setPlayerTag(victim, getCooldown());
                 }
-                if (!Configuration.getBypass() || !attacker.hasPermission(Permissions.BYPASS)) {
+                if (!Configuration.getBypass() || !attacker.hasPermission(Permissions.BYPASS) || !attacker.hasPermission(Permissions.ALL)) {
                     if (getPlayerTag(attacker) == -1) {
                         setPlayerTag(attacker, getCooldown());
                         String message = replaceColors(getPrefix() + getTagMessage());
