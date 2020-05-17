@@ -13,9 +13,15 @@ import static com.Others.Functions.replaceColors;
 public class Commands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-
         // Tag Command
-        if (label.equalsIgnoreCase("tag") && commandSender instanceof Player) {
+        if (label.equalsIgnoreCase("tag")) {
+            if(!(commandSender instanceof Player)){
+                String message = replaceColors(Configuration.getPrefix() + Configuration.getOnlyPlayerMessage());
+                message = message.replace("<player>", "null");
+                message = message.replace("<tag-cooldown>", "null");
+                commandSender.sendMessage(message);
+                return false;
+            }
             Player player = (Player) commandSender;
             String message;
             if (Data.getPlayerTag(player) > -1) {
