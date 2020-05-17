@@ -13,7 +13,7 @@ public class main extends JavaPlugin {
 
     private static main plugin;
     private static PluginManager manager;
-    private static final String version = "1.0-Beta'";
+    private static final String version = "1.0-Beta";
 
     public void onEnable(){
         Data.setIsServerGoingDown(false);

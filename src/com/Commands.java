@@ -36,7 +36,6 @@ public class Commands implements CommandExecutor {
             }
             // Help Command
             if (arguments == null || arguments.length == 0) {
-                ((Player) commandSender).teleport((Player) commandSender);
                 for (String s : Configuration.getHelpMessage()) commandSender.sendMessage(replaceColors(s));
             } else {
                 // Reload Command /ct reload
