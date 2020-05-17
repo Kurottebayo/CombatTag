@@ -28,7 +28,7 @@ public class Commands implements CommandExecutor {
 
         } else if ((label.equalsIgnoreCase("ct") || label.equalsIgnoreCase("combattag"))) {
             if (!commandSender.hasPermission(Permissions.ALL)) {
-                String message = replaceColors(Configuration.getPrefix() + Configuration.getMissingPermissions());
+                String message = replaceColors(Configuration.getPrefix() + Configuration.getMissingPermissionsMessage());
                 message = message.replace("<player>", "null");
                 message = message.replace("<tag-cooldown>", "null");
                 commandSender.sendMessage(message);
@@ -43,26 +43,26 @@ public class Commands implements CommandExecutor {
                     if (arguments.length > 1 && (arguments[1].equalsIgnoreCase("messages") || arguments[1].equalsIgnoreCase("config"))) {
                         if (arguments[1].equalsIgnoreCase("messages")) {
                             Configuration.loadMessages();
-                            String message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedMessages());
+                            String message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedMessagesMessage());
                             message = message.replace("<player>", "null");
                             message = message.replace("<tag-cooldown>", "null");
                             commandSender.sendMessage(message);
                         }
                         if (arguments[1].equalsIgnoreCase("config")) {
                             Configuration.loadConfiguration();
-                            String message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedConfig());
+                            String message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedConfigMessage());
                             message = message.replace("<player>", "null");
                             message = message.replace("<tag-cooldown>", "null");
                             commandSender.sendMessage(message);
                         }
                     } else {
                         Configuration.loadConfiguration();
-                        String message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedConfig());
+                        String message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedConfigMessage());
                         message = message.replace("<player>", "null");
                         message = message.replace("<tag-cooldown>", "null");
                         commandSender.sendMessage(message);
                         Configuration.loadMessages();
-                        message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedMessages());
+                        message = replaceColors(Configuration.getPrefix() + Configuration.getReloadedMessagesMessage());
                         message = message.replace("<player>", "null");
                         message = message.replace("<tag-cooldown>", "null");
                         commandSender.sendMessage(message);

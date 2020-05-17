@@ -61,7 +61,6 @@ public class Configuration {
         header.add("## Variables: ");
         header.add("##    - <player>: Return a player's name, can be null if the event is non-related to a player");
         header.add("##    - <tag-cooldown>: Return the current time of the user tag related to the event. Can be between -1 and the defined tag number in config.yml");
-        header.add("## Variables: ");
         setHeader(header, config);
         addNode("Prefix", "&9CombatTag > ", config);
         setComment("Prefix", " ", config);
@@ -108,73 +107,45 @@ public class Configuration {
         addComment("Whitelist Commands", " ", config, AUTOINDENT);
         Bukkit.getConsoleSender().sendMessage("§9CombatTag> §aConfig.yml created!");
     }
-
+    @SuppressWarnings("all")
     public static void loadConfiguration() {
-        Bukkit.getConsoleSender().sendMessage("§9CombatTag> §6Loading configuration...");
-        if (!configurationExists()) createConfiguration();
-        prefix = (String) getNode("Prefix", config);
-        cooldown = Integer.parseInt((String) getNode("Cooldown", config));
-        cancelTeleport = ((String) getNode("Cancel Teleport", config)).toLowerCase();
-        enableBypass = Boolean.parseBoolean((String) getNode("Enable Bypass", config));
-        punishment = (String) getNode("Punishment Type", config);
-        punishmentCommand = (String) getNode("Punishment Command", config);
-        broadcast = Boolean.parseBoolean((String) getNode("Broadcast", config));
-        broadcastMessage = (String) getNode("Broadcast Message", config);
-        whitelistedCommands = (List<String>) getNode("Whitelist Commands", config);
-        for(int i = 0; i < whitelistedCommands.size(); i++) whitelistedCommands.set(i,whitelistedCommands.get(i).toLowerCase());
-        Bukkit.getConsoleSender().sendMessage("§9CombatTag> §aConfiguration loaded!");
+        Runnable run = () -> {
+            Bukkit.getConsoleSender().sendMessage("§9CombatTag> §6Loading configuration...");
+            if (!configurationExists()) createConfiguration();
+            prefix = (String) getNode("Prefix", config);
+            cooldown = Integer.parseInt((String) getNode("Cooldown", config));
+            cancelTeleport = ((String) getNode("Cancel Teleport", config)).toLowerCase();
+            enableBypass = Boolean.parseBoolean((String) getNode("Enable Bypass", config));
+            punishment = (String) getNode("Punishment Type", config);
+            punishmentCommand = (String) getNode("Punishment Command", config);
+            broadcast = Boolean.parseBoolean((String) getNode("Broadcast", config));
+            broadcastMessage = (String) getNode("Broadcast Message", config);
+            whitelistedCommands = (List<String>) getNode("Whitelist Commands", config);
+            for (int i = 0; i < whitelistedCommands.size(); i++)
+                whitelistedCommands.set(i, whitelistedCommands.get(i).toLowerCase());
+            Bukkit.getConsoleSender().sendMessage("§9CombatTag> §aConfiguration loaded!");
+        };
+        new Thread(run).start();
     }
     private static boolean configurationExists(){ return Files.exists(Paths.get(config)); }
 
-    public static boolean isValidConfiguration(){
-        if(!nodeExists("Prefix",config) || !nodeHasValue("Prefix",config)) return false;
-        if(!nodeExists("Cooldown",config) || !nodeHasValue("Cooldown",config) || !tryParseInt((String) getNode("Cooldown",config))) return false;
-        if(!nodeExists("Punishment Type",config) || !nodeHasValue("Punishment Type",config)) return false;
-        if(!nodeExists("Punishment Command",config) || !nodeHasValue("Punishment Command",config)) return false;
-        if(!nodeExists("Broadcast",config) || !nodeHasValue("Broadcast",config) || !tryParseBoolean((String) getNode("Broadcast",config))) return false;
-        if(!nodeExists("Broadcast Message",config) || !nodeHasValue("Broadcast Message",config)) return false;
-        if(!nodeExists("Whitelist Commands",config)) return false;
-        return true;
-    }
-
-    private static void setConfigValue(String node, Object newValue){ setNodeValue(node,newValue,config); }
-
     public static String getPrefix() { return prefix; }
-
-    public static void setPrefix(String prefix) { Configuration.prefix = prefix; setConfigValue("Prefix",prefix); }
 
     public static int getCooldown() { return cooldown; }
 
-    public static void setCooldown(int cooldown) { Configuration.cooldown = cooldown; setConfigValue("Cooldown",cooldown); }
-
     public static String getCancelTeleport() { return cancelTeleport; }
-
-    public static void setCancelTeleport(String events) { Configuration.cancelTeleport = events; setConfigValue("Cancel Teleport",events); }
-
-    public static void setBypass(boolean value) { enableBypass = value; setConfigValue("Enable Bypass",value); }
 
     public static boolean getBypass() { return enableBypass; }
 
     public static String getPunishment() { return punishment; }
 
-    public static void setPunishment(String punishment) { if(punishment.equalsIgnoreCase("kill") || punishment.equalsIgnoreCase("clear")) { Configuration.punishment = punishment; setConfigValue("Punishment Type", punishment); } }
-
     public static String getPunishmentCommand() { if(punishmentCommand.startsWith("/")) { return punishmentCommand; } else return "/"+punishmentCommand; }
-
-    public static void setPusnishmentCommand(String command) { punishmentCommand = command; setConfigValue("Punishment Commands",command); }
 
     public static boolean isBroadcast() { return broadcast; }
 
-    public static void setBroadcast(boolean value) { broadcast = value; setConfigValue("Broadcast",value); }
-
     public static String getBroadcastMessage() { return broadcastMessage; }
 
-    public static void setBroadcastMessage(String message) { broadcastMessage = message; setConfigValue("Broadcast Message",message); }
-
     public static List<String> getWhitelistedCommands() { return whitelistedCommands; }
-
-    public static void setWhitelistedCommands(List<String> commands) { whitelistedCommands = commands; setConfigValue("Whitelist Commands",commands); }
-
 
     /**
      *
@@ -196,11 +167,11 @@ public class Configuration {
     private static String onlyPlayer;
     private static List<String> help;
 
-    public static void createMessages(){
+    public static void createMessages() {
         Bukkit.getConsoleSender().sendMessage("§9CombatTag> §6Creating Messages.yml...");
         try {
             Files.deleteIfExists(Paths.get(messages));
-            Files.createDirectories(Paths.get(messages.substring(0,messages.lastIndexOf('\\'))));
+            Files.createDirectories(Paths.get(messages.substring(0, messages.lastIndexOf('\\'))));
             Files.createFile(Paths.get(messages));
         } catch (IOException e) {
             e.printStackTrace();
@@ -212,105 +183,80 @@ public class Configuration {
         header.add("                                By: Kuro                                  #");
         header.add("                                                                          #");
         header.add("############################################################################");
-        setHeader(header,messages);
-
-        addNode("Tag", "&7Estás agora em combate durante &c<tag-cooldown> segundos&7!",messages);
-        addNode("Tag Out", "&aSaiste de combate, podes executar comandos ou sair do servidor em segurança!",messages);
-        addNode("Tag Command in Combat", "&7Faltam-te &c<tag-cooldown> segundos &7para saires de combate!",messages);
-        addNode("Tag Command out Combat", "&aNão estás em combate!",messages);
-        addNode("Cant Teleport in Combat", "&cNão podes teleportar em combate!",messages);
-        addNode("Cant Use Commands in Combat", "&cNão podes usar este comando enquanto estiveres em combate!",messages);
-        addNode("Join After Punishment", "&cUma vez que saíste em combate anteriormente, as devidas punições foram aplicadas!",messages);
-        addNode("Log", "&8[LOG] &7O jogador &8<player> &7deslogou em combate!",messages);
-        addNode("Reloaded Config", "&aConfiguração recarregada!",messages);
-        addNode("Reloaded Messages", "&aMensagens recarregadas!",messages);
-        addNode("Missing Permissions", "&cNão tens permissões suficientes para executar este comando!",messages);
-        addNode("Only Player", "&cApenas jogadores podem executar este comando!",messages);
+        header.add("## Variables: ");
+        header.add("##    - <player>: Return a player's name, can be null if the event is non-related to a player");
+        header.add("##    - <tag-cooldown>: Return the current time of the user tag related to the event. Can be between -1 and the defined tag number in config.yml");
+        setHeader(header, messages);
+        addNode("Tag", "&7Estás agora em combate durante &c<tag-cooldown> segundos&7!", messages);
+        addNode("Tag Out", "&aSaiste de combate, podes executar comandos ou sair do servidor em segurança!", messages);
+        addNode("Tag Command in Combat", "&7Faltam-te &c<tag-cooldown> segundos &7para saires de combate!", messages);
+        addNode("Tag Command out Combat", "&aNão estás em combate!", messages);
+        addNode("Cant Teleport in Combat", "&cNão podes teleportar em combate!", messages);
+        addNode("Cant Use Commands in Combat", "&cNão podes usar este comando enquanto estiveres em combate!", messages);
+        addNode("Join After Punishment", "&cUma vez que saíste em combate anteriormente, as devidas punições foram aplicadas!", messages);
+        addNode("Log", "&8[LOG] &7O jogador &8<player> &7deslogou em combate!", messages);
+        addNode("Reloaded Config", "&aConfiguração recarregada!", messages);
+        addNode("Reloaded Messages", "&aMensagens recarregadas!", messages);
+        addNode("Missing Permissions", "&cNão tens permissões suficientes para executar este comando!", messages);
+        addNode("Only Player", "&cApenas jogadores podem executar este comando!", messages);
         List<String> helpMessage = new Vector<>();
         helpMessage.add("&6&m---------------------------&r &eCombat Tag &6&m---------------------------&r");
         helpMessage.add("  &eAliases &a/ct");
         helpMessage.add("   &a/combattag reload [<config|messages>] &f- &7Recarrega a configuração, mensagens ou um dos dois");
         helpMessage.add("   &a/combattag &f- &7Mostra esta mensagem");
         helpMessage.add("&6&m----------------------------------------------------------------&r");
-        addNode("Help", helpMessage,messages);
+        addNode("Help", helpMessage, messages);
         Bukkit.getConsoleSender().sendMessage("§9CombatTag> §aMessages.yml created!");
     }
 
+    @SuppressWarnings("all")
     public static void loadMessages() {
-        Bukkit.getConsoleSender().sendMessage("§9CombatTag> §6Loading messages...");
-        if (!messagesExists()) createMessages();
-        tag = (String) getNode("Tag", messages);
-        tagOut = (String) getNode("Tag Out", messages);
-        tagCommandInCombat = (String) getNode("Tag Command in Combat", messages);
-        tagCommandOutCombat = (String) getNode("Tag Command out Combat", messages);
-        cantUseCommandsInCombat = (String) getNode("Cant Use Commands in Combat", messages);
-        cantTeleportInCombat = (String) getNode("Cant Teleport in Combat", messages);
-        joinAfterPunishment = (String) getNode("Join After Punishment", messages);
-        log = (String) getNode("Log", messages);
-        reloadedConfig = (String) getNode("Reloaded Config", messages);
-        reloadedMessages = (String) getNode("Reloaded Messages", messages);
-        missingPermissions = (String) getNode("Missing Permissions", messages);
-        onlyPlayer = (String) getNode("Only Player", messages);
-        help = (List<String>) getNode("Help", messages);
-        Bukkit.getConsoleSender().sendMessage("§9CombatTag> §aMessages loaded!");
+        Runnable run = () -> {
+            Bukkit.getConsoleSender().sendMessage("§9CombatTag> §6Loading messages...");
+            if (!messagesExists()) createMessages();
+            tag = (String) getNode("Tag", messages);
+            tagOut = (String) getNode("Tag Out", messages);
+            tagCommandInCombat = (String) getNode("Tag Command in Combat", messages);
+            tagCommandOutCombat = (String) getNode("Tag Command out Combat", messages);
+            cantUseCommandsInCombat = (String) getNode("Cant Use Commands in Combat", messages);
+            cantTeleportInCombat = (String) getNode("Cant Teleport in Combat", messages);
+            joinAfterPunishment = (String) getNode("Join After Punishment", messages);
+            log = (String) getNode("Log", messages);
+            reloadedConfig = (String) getNode("Reloaded Config", messages);
+            reloadedMessages = (String) getNode("Reloaded Messages", messages);
+            missingPermissions = (String) getNode("Missing Permissions", messages);
+            onlyPlayer = (String) getNode("Only Player", messages);
+            help = (List<String>) getNode("Help", messages);
+            Bukkit.getConsoleSender().sendMessage("§9CombatTag> §aMessages loaded!");
+        };
+        new Thread(run).start();
     }
 
     private static boolean messagesExists(){ return Files.exists(Paths.get(messages)); }
 
-    @Deprecated
-    public static boolean isValidMessages(){ return true; }
-
-    private static void setMessageValue(String node, Object newValue){ setNodeValue(node,newValue,messages); }
-
     public static String getTagMessage() { return tag; }
-
-    public static void setTagMessage(String message) { Configuration.tag = message; setConfigValue("Tag Message",messages); }
 
     public static String getTagOutMessage() { return tagOut; }
 
-    public static void setTagOutMessage(String message) { Configuration.tagOut = message; setConfigValue("Tag Out Message",messages); }
-
-    public static String getConsoleMessage() { return log; }
-
-    public static void setConsoleMessage(String message) { Configuration.log = message; setConfigValue("Log",messages); }
+    public static String getLogMessage() { return log; }
 
     public static String getJoinMessageAfterPunishment() { return joinAfterPunishment; }
 
-    public static void setJoinMessageAfterPunishment(String message) { Configuration.joinAfterPunishment = message; setConfigValue("Join Message After Punishment",messages); }
-
     public static String getCantUseCommandsInCombat() { return cantUseCommandsInCombat; }
-
-    public static void setCantUseCommandsInCombat(String cantUseCommandsInCombat) { Configuration.cantUseCommandsInCombat = cantUseCommandsInCombat; setConfigValue("Cant Use Commands in Combat",messages);}
 
     public static String getCantTeleportInCombat() { return cantTeleportInCombat; }
 
-    public static void setCantTeleportInCombat(String cantTeleportInCombat) { Configuration.cantTeleportInCombat = cantTeleportInCombat; setConfigValue("Cant Teleport in Combat",messages);}
-
     public static String getTagCommandInCombatMessage() { return tagCommandInCombat; }
-
-    public static void setTagCommandInCombatMessage(String tagCommandInCombatMessage) { Configuration.tagCommandInCombat = tagCommandInCombatMessage; setConfigValue("Tag Command in Combat",messages); }
 
     public static String getTagCommandOutCombatMessage() { return tagCommandOutCombat; }
 
-    public static void setTagCommandOutCombatMessage(String tagCommandOutCombatMessage) { Configuration.tagCommandOutCombat = tagCommandOutCombatMessage; setConfigValue("Tag Command out Combat",messages); }
-
     public static List<String> getHelpMessage() { return help; }
 
-    public static void setHelpMessage(List<String> helpMessage) { Configuration.help = helpMessage; setConfigValue("Help",messages); }
+    public static String getReloadedConfigMessage() { return reloadedConfig; }
 
-    public static String getReloadedConfig() { return reloadedConfig; }
+    public static String getReloadedMessagesMessage() { return reloadedMessages; }
 
-    public static void setReloadedConfigMessage(String reloadedConfig) { Configuration.reloadedConfig = reloadedConfig; setConfigValue("Reloaded Config",messages); }
+    public static String getMissingPermissionsMessage() { return missingPermissions; }
 
-    public static String getReloadedMessages() { return reloadedMessages; }
-
-    public static void setReloadedMessages(String reloadedMessages) { Configuration.reloadedMessages = reloadedMessages; setConfigValue("Reloaded Messages",messages); }
-
-    public static String getMissingPermissions() { return missingPermissions; }
-
-    public static void setMissingPermissions(String missingPermissions) { Configuration.missingPermissions = missingPermissions; setConfigValue("Missing Permissions",messages); }
-
-    public static String getOnlyPlayer() { return onlyPlayer; }
-
-    public static void setOnlyPlayer(String message) { Configuration.onlyPlayer = message; setConfigValue("Only Player",messages);}
+    public static String getOnlyPlayerMessage() { return onlyPlayer; }
 }

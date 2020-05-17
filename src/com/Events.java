@@ -90,6 +90,10 @@ public class Events implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), Configuration.getPunishmentCommand().substring(1));
             }
         }
+        String message = replaceColors(Configuration.getPrefix() + Configuration.getLogMessage());
+        message = message.replace("<player>", player.getName());
+        message = message.replace("<tag-cooldown>", String.valueOf(getPlayerTag(player)));
+        Bukkit.getConsoleSender().sendMessage(message);
 
     }
 
