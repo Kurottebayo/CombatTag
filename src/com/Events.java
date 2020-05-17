@@ -87,7 +87,10 @@ public class Events implements Listener {
                 }
             }
             if (!Configuration.getPunishmentCommand().equalsIgnoreCase("null") && !Configuration.getPunishmentCommand().equalsIgnoreCase("")) {
-                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), Configuration.getPunishmentCommand().substring(1));
+                String command = Configuration.getPunishmentCommand().substring(1);
+                command = command.replace("<player>", player.getName());
+                command = command.replace("<tag-cooldown>", "null");
+                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), command);
             }
         }
         String message = replaceColors(Configuration.getPrefix() + Configuration.getLogMessage());

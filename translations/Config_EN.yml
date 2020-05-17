@@ -30,7 +30,7 @@ Punishment Type: Kill
 # 
 # Choose a command to trigger if a player logs out of combat. Type null to inform that you do not want any commands to be executed
 # 
-Punishment Command: '/ban <player> Desconectaste em combate'
+Punishment Command: null
 # 
 # Broadcast to the entire server that a player logs out of in combat?
 # 
@@ -38,7 +38,7 @@ Broadcast: true
 # 
 # Message to be broadcast if a player logs out of combat, and if the "Broadcast" option is true
 # 
-Broadcast Message: '&cO jogador &4<player> &cdesconectou-se em combate!'
+Broadcast Message: '&4<player> &chas disconnected in combat.'
 # 
 # Commands enabled during combat
 # 
