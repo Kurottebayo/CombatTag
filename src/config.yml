@@ -1,42 +1,52 @@
-## Variáveis:
-##   - <player>: Retorna o nome do jogador em questão.
-##   - <tag-cooldown>: Retorna o tempo que falta para poder deslogar/executar ações
-
-# Prefixo
-
-Prefix: '&9CombatTag> '
-
-# Tempo necessário para o jogador ser libertado da Tag
-Tag Cooldown: 15
-
-# Mensagem de quando o jogador entra em combate
-Tag Message: 'Estás agora em combate durante <tag-cooldown> segundos!'
-
-# Mensagem de quando o jogador sair de combate
-Tag Out Message: 'Saiste de combate, podes executar comandos ou sair do servidor em segurança!'
-
-# Mensagem de quando o jogador entrar e, caso tenha deslogado em combate
-Join Message After Punishment: 'Uma vez que saíste em combate anteriormente, as devidas punições foram aplicadas!'
-
-# Mensagem que a CONSOLA receberá quando um jogador deslogar em combate
-Console Message: '&8[LOG] &7O jogador &8<player> &7deslogou em combate!'
-
-# Caso o jogador se desconecte em combate, qual ação tomar? Matá-lo (kill) ou apenas limpar o seu inventário (clear)?
+############################################################################
+#                                                                          #
+#                           Plugin Configuration                           #
+#                                By: Kuro                                  #
+#                                                                          #
+############################################################################
+## Variables: 
+##    - <player>: Return a player's name, can be null if the event is non-related to a player
+##    - <tag-cooldown>: Return the current time of the user tag related to the event. Can be between -1 and the defined tag number in config.yml
+# 
+# Plugin Prefix
+# 
+Prefix: '&9CombatTag > '
+# 
+# The required cooldown for the player to log out of the server/execute commands/teleport
+# 
+Cooldown: 15
+# 
+# Allow users with kuro.combattag.bypass or kuro.combattag.* permission to not trigger tag blocking
+# 
+Enable Bypass: false
+# 
+# Cancel a specific teleport while in combat
+#   - Nodes: ENDER_PEARL, PLUGIN, COMMAND, UNKNOWN
+# 
+Cancel Teleport: PLUGIN, COMMAND, ENDER_PEARL
+# 
+# Choose how the user will be punished if he goes out in combat. Kill and Clear are the performable actions
+# 
 Punishment Type: Kill
-
-# Executar um comando, quando ele se desconecta, /tempban <player> 5m (ou não: null)?
-Punishment Command: 'null'
-
-# Enviar uma mensagem quando o jogador se disconectar em combate, para todos os jogadores?
+# 
+# Choose a command to trigger if a player logs out of combat. Type null to inform that you do not want any commands to be executed
+# 
+Punishment Command: '/say Oie'
+# 
+# Broadcast to the entire server that a player logs out of in combat?
+# 
 Broadcast: true
-
-# Qual mensagem enviar caso ele se disconecte em combate (se a opção anterior for verdadeira)
-Broadcast-Message: '&eO jogador <player> disconectou-se em combate'
-
-# Quais comandos o jogador pode executar enquanto está em combate?
-Whitelist Commands:
-  - tell
-  - m
-  - r
-  - msg
-  - tag
+# 
+# Message to be broadcast if a player logs out of combat, and if the "Broadcast" option is true
+# 
+Broadcast Message: '&cO jogador &4<player> &cdisconectou-se em combate!'
+# 
+# Commands enabled during combat
+# 
+Whitelist Commands: 
+- tell
+- m
+- r
+- msg
+- tag
+- ct
