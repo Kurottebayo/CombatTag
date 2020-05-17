@@ -1,0 +1,11 @@
+name: CombatTag
+version: 1.0-Beta
+description: Don't let them go away in combat!
+author: Kuro
+main: com.main
+commands:
+  combattag:
+    description: Combat Tag help
+    aliases: ct
+  tag:
+      description: Check your tag cooldown!

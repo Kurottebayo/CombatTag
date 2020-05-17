@@ -1,0 +1,42 @@
+## Variáveis:
+##   - <player>: Retorna o nome do jogador em questão.
+##   - <tag-cooldown>: Retorna o tempo que falta para poder deslogar/executar ações
+
+# Prefixo
+
+Prefix: '&9CombatTag> '
+
+# Tempo necessário para o jogador ser libertado da Tag
+Tag Cooldown: 15
+
+# Mensagem de quando o jogador entra em combate
+Tag Message: 'Estás agora em combate durante <tag-cooldown> segundos!'
+
+# Mensagem de quando o jogador sair de combate
+Tag Out Message: 'Saiste de combate, podes executar comandos ou sair do servidor em segurança!'
+
+# Mensagem de quando o jogador entrar e, caso tenha deslogado em combate
+Join Message After Punishment: 'Uma vez que saíste em combate anteriormente, as devidas punições foram aplicadas!'
+
+# Mensagem que a CONSOLA receberá quando um jogador deslogar em combate
+Console Message: '&8[LOG] &7O jogador &8<player> &7deslogou em combate!'
+
+# Caso o jogador se desconecte em combate, qual ação tomar? Matá-lo (kill) ou apenas limpar o seu inventário (clear)?
+Punishment Type: Kill
+
+# Executar um comando, quando ele se desconecta, /tempban <player> 5m (ou não: null)?
+Punishment Command: 'null'
+
+# Enviar uma mensagem quando o jogador se disconectar em combate, para todos os jogadores?
+Broadcast: true
+
+# Qual mensagem enviar caso ele se disconecte em combate (se a opção anterior for verdadeira)
+Broadcast-Message: '&eO jogador <player> disconectou-se em combate'
+
+# Quais comandos o jogador pode executar enquanto está em combate?
+Whitelist Commands:
+  - tell
+  - m
+  - r
+  - msg
+  - tag

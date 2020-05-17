@@ -1,0 +1,6 @@
+#/src/com/main.java
+.idea
+*.iml
+
+# Project exclude paths
+/out/
