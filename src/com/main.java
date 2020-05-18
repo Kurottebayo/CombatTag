@@ -25,6 +25,9 @@ public class main extends JavaPlugin {
         this.getCommand("ct").setExecutor(new Commands());
         this.getCommand("combattag").setExecutor(new Commands());
         this.getCommand("tag").setExecutor(new Commands());
+        this.getCommand("fly").setExecutor(new Commands());
+        this.getCommand("title").setExecutor(new Commands());
+        this.getCommand("clearchat").setExecutor(new Commands());
         this.setEnabled(true);
         loadConfiguration();
         loadMessages();

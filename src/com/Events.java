@@ -4,15 +4,17 @@ import com.Config.Configuration;
 import com.Objects.Tag;
 import com.Others.Data;
 import com.Constants.Permissions;
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
 
 import static com.Config.Configuration.*;
 import static com.Constants.Paths.BINARY_DATABASE;
@@ -37,6 +39,7 @@ public class Events implements Listener {
             }
         }
     }
+
     @EventHandler
     public void onPreprocessCommand(PlayerCommandPreprocessEvent event)
     {
@@ -109,13 +112,33 @@ public class Events implements Listener {
         Data.removePlayer(event.getPlayer());
     }
 
+    public boolean denyPvPRegion(Entity entity) {
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
+            for (final ProtectedRegion rg : WGBukkit.getRegionManager(entity.getWorld()).getApplicableRegions(entity.getLocation())) {
+                if((entity instanceof Player) && (rg.getFlag(DefaultFlag.PVP) == null || rg.getFlag(DefaultFlag.PVP).toString().equalsIgnoreCase("DENY"))) return true;
+            }
+        }
+        return false;
+    }
+
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent event){
         if (!Data.isServerGoingDown()) {
-            if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+            if(getDisabledWorlds().contains(event.getEntity().getWorld().getName().toLowerCase())) return;
+            if (event.getEntity() instanceof Player && (event.getDamager() instanceof Player ||
+                    (event.getDamager() instanceof Projectile && (((Projectile) event.getDamager()).getShooter() instanceof Player)) &&
+                            !((Player) ((Projectile) event.getDamager()).getShooter()).getName().equals(((Player) event.getEntity()).getName()))) {
                 Player victim = (Player) event.getEntity();
-                Player attacker = (Player) event.getDamager();
-                if (!Configuration.getBypass() || !victim.hasPermission(Permissions.BYPASS) || !victim.hasPermission(Permissions.ALL)) {
+                Player attacker;
+                if(event.getDamager() instanceof Projectile){
+                    attacker = (Player) ((Projectile) event.getDamager()).getShooter();
+                } else attacker = (Player) event.getDamager();
+                if(isWorldGuardEnabled() && (denyPvPRegion(victim) || denyPvPRegion(attacker))) return;
+                if ((!Configuration.getBypass() || !victim.hasPermission(Permissions.BYPASS) || !victim.hasPermission(Permissions.ALL))
+                        && ((getOnlyTag().equalsIgnoreCase("both") || getOnlyTag().equalsIgnoreCase("victim")))
+                        && !(getPreventGamemodeTag().contains(victim.getGameMode().name().toLowerCase()))) {
+                    if(isPreventFly() && victim.isFlying()) victim.setFlying(false);
+                    if(isDisableFly() && victim.getAllowFlight()) victim.setAllowFlight(false);
                     if (getPlayerTag(victim) == -1) {
                         setPlayerTag(victim, getCooldown());
                         String message = replaceColors(getPrefix() + getTagMessage());
@@ -125,7 +148,13 @@ public class Events implements Listener {
                         RemoveTag.createPlayerThread(victim.getName());
                     } else setPlayerTag(victim, getCooldown());
                 }
-                if (!Configuration.getBypass() || !attacker.hasPermission(Permissions.BYPASS) || !attacker.hasPermission(Permissions.ALL)) {
+                if ((!Configuration.getBypass() || !attacker.hasPermission(Permissions.BYPASS) || !attacker.hasPermission(Permissions.ALL))
+                        && ((getOnlyTag().equalsIgnoreCase("both") || getOnlyTag().equalsIgnoreCase("attacker")))
+                        && !(getPreventGamemodeTag().contains(attacker.getGameMode().name().toLowerCase()))) {
+                    if(isPreventFly() && attacker.isFlying()) {
+                        attacker.setFlying(false);
+                    }
+                    if(isDisableFly() && attacker.getAllowFlight()) attacker.setAllowFlight(false);
                     if (getPlayerTag(attacker) == -1) {
                         setPlayerTag(attacker, getCooldown());
                         String message = replaceColors(getPrefix() + getTagMessage());
@@ -135,9 +164,47 @@ public class Events implements Listener {
                         RemoveTag.createPlayerThread(attacker.getName());
                     } else setPlayerTag(attacker, getCooldown());
                 }
+            } else if((event.getEntity() instanceof Player && isAllowMobTagPlayers())
+                    && (getOnlyTag().equalsIgnoreCase("both") || getOnlyTag().equalsIgnoreCase("victim"))
+                    && !getPreventGamemodeTag().contains(((Player)event.getEntity()).getGameMode().name().toLowerCase())){
+                Player victim = (Player) event.getEntity();
+                if (!Configuration.getBypass() || !victim.hasPermission(Permissions.BYPASS) || !victim.hasPermission(Permissions.ALL)) {
+                    if(isPreventFly() && victim.isFlying()) victim.setFlying(false);
+                    if(isDisableFly() && victim.getAllowFlight()) victim.setAllowFlight(false);
+                    if (getPlayerTag(victim) == -1) {
+                        setPlayerTag(victim, getCooldown());
+                        String message = replaceColors(getPrefix() + getTagMessage());
+                        message = message.replace("<player>", victim.getName());
+                        message = message.replace("<tag-cooldown>", String.valueOf(getPlayerTag(victim)));
+                        victim.sendMessage(message);
+                        RemoveTag.createPlayerThread(victim.getName());
+                    } else setPlayerTag(victim, getCooldown());
+                }
+            } else if((event.getDamager() instanceof Player || (event.getDamager() instanceof Projectile && (((Projectile) event.getDamager()).getShooter() instanceof Player)))
+                    && isAllowMobTagPlayers()
+                    && (getOnlyTag().equalsIgnoreCase("both") || getOnlyTag().equalsIgnoreCase("attacker"))){
+                Player attacker;
+                if(event.getDamager() instanceof Projectile){
+                    attacker = (Player) ((Projectile) event.getDamager()).getShooter();
+                } else attacker = (Player) event.getDamager();
+                if(!getPreventGamemodeTag().contains(attacker.getGameMode().name().toLowerCase())) {
+                    if (!Configuration.getBypass() || !attacker.hasPermission(Permissions.BYPASS) || !attacker.hasPermission(Permissions.ALL)) {
+                        if (isPreventFly() && attacker.isFlying()) attacker.setFlying(false);
+                        if (isDisableFly() && attacker.getAllowFlight()) attacker.setAllowFlight(false);
+                        if (getPlayerTag(attacker) == -1) {
+                            setPlayerTag(attacker, getCooldown());
+                            String message = replaceColors(getPrefix() + getTagMessage());
+                            message = message.replace("<player>", attacker.getName());
+                            message = message.replace("<tag-cooldown>", String.valueOf(getPlayerTag(attacker)));
+                            attacker.sendMessage(message);
+                            RemoveTag.createPlayerThread(attacker.getName());
+                        } else setPlayerTag(attacker, getCooldown());
+                    }
+                }
             }
         }
     }
+
     @EventHandler
     public void onTeleport(PlayerTeleportEvent event){
         if(Data.getPlayerTag(event.getPlayer()) > -1 && Configuration.getCancelTeleport() != null && Configuration.getCancelTeleport().contains(event.getCause().toString().toLowerCase())) {
@@ -146,6 +213,27 @@ public class Events implements Listener {
             message = message.replace("<player>", event.getPlayer().getName());
             message = message.replace("<tag-cooldown>", String.valueOf(getPlayerTag(event.getPlayer())));
             event.getPlayer().sendMessage(message);
+        }
+    }
+
+    @EventHandler
+    public void onFlight(PlayerToggleFlightEvent event){
+        if(Data.getPlayerTag(event.getPlayer()) > -1 && ((isPreventFly()) || (isDisableFly()))) {
+            event.setCancelled(true);
+            if(isPreventFly()) event.getPlayer().setFlying(false);
+            if(isDisableFly()) event.getPlayer().setAllowFlight(false);
+            String message = replaceColors(getPrefix() + getFlyingInCombat());
+            message = message.replace("<player>", event.getPlayer().getName());
+            message = message.replace("<tag-cooldown>", String.valueOf(getPlayerTag(event.getPlayer())));
+            event.getPlayer().sendMessage(message);
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event){
+        if(Data.getPlayerTag(event.getEntity()) > -1) {
+            RemoveTag.deletePlayerThread(event.getEntity().getName());
+            Data.setPlayerTag(event.getEntity(),-1);
         }
     }
 }

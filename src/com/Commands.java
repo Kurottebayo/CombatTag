@@ -3,15 +3,18 @@ package com;
 import com.Config.Configuration;
 import com.Constants.Permissions;
 import com.Others.Data;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static com.Config.Configuration.getDisabledWorlds;
 import static com.Others.Functions.replaceColors;
 
 public class Commands implements CommandExecutor {
     @Override
+    @SuppressWarnings("all")
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // Tag Command
         if (label.equalsIgnoreCase("tag")) {
@@ -23,6 +26,13 @@ public class Commands implements CommandExecutor {
                 return false;
             }
             Player player = (Player) commandSender;
+            if(getDisabledWorlds().contains(player.getWorld().getName().toLowerCase())){
+                String message = replaceColors(Configuration.getPrefix() + Configuration.getDisabledWorldMessage());
+                message = message.replace("<player>", "null");
+                message = message.replace("<tag-cooldown>", "null");
+                player.sendMessage(message);
+                return false;
+            }
             String message;
             if (Data.getPlayerTag(player) > -1) {
                 message = replaceColors(Configuration.getPrefix() + Configuration.getTagCommandInCombatMessage());
@@ -75,10 +85,14 @@ public class Commands implements CommandExecutor {
                     }
                 } else if (arguments[0].equalsIgnoreCase("help")) {
                     for (String s : Configuration.getHelpMessage()) commandSender.sendMessage(replaceColors(s));
+                } else {
+                    String message = replaceColors(Configuration.getPrefix() + Configuration.getArgumentNotFound());
+                    message = message.replace("<player>", "null");
+                    message = message.replace("<tag-cooldown>", "null");
+                    commandSender.sendMessage(message);
                 }
             }
         }
-
         return false;
     }
 }
