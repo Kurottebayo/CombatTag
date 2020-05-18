@@ -14,20 +14,44 @@ Prefix: '&9CombatTag > '
 # 
 # The required cooldown for the player to log out of the server/execute commands/teleport
 # 
-Cooldown: 15
+Cooldown: 8
+# 
+# Allows mobs to activate the player's tag when one of the two is damaged by the other
+# 
+Allow Mob Tag Players: true
+# 
+# Prevent a user in a given gamemode from triggering the tag for himself
+#    - Nodes: CREATIVE, SURVIVAL, ADVENTURE, SPECTATOR, NULL(to disable this function)
+# 
+Prevent Gamemode Tag: SPECTATOR
+# 
+# Do not allow the player to fly during combat
+# 
+Prevent Fly: true
+# 
+# Disable the fly during combat
+# The difference between this one and the top one is that, in the top one, the fly will be automatically 
+# activated at the end of the tag, whereas in this one, the player would have, for example, to use a command
+# that would enable him to fly
+# 
+Disable Fly: false
 # 
 # Allow users with kuro.combattag.bypass or kuro.combattag.* permission to not trigger tag blocking
 # 
-Enable Bypass: true
+Enable Bypass: false
 # 
 # Cancel a specific teleport while in combat
 #   - Nodes: ENDER_PEARL, PLUGIN, COMMAND, UNKNOWN
 # 
-Cancel Teleport: PLUGIN, COMMAND
+Cancel Teleport: PLUGIN, COMMAND, ENDER_PEARL
+# 
+# Just trigger the tag for ATTACKER, VICTIM or BOTH.
+# 
+Only Tag: BOTH
 # 
 # Choose how the user will be punished if he goes out in combat. Kill and Clear are the performable actions
 # 
-Punishment Type: Kill
+Punishment Type: CLEAR
 # 
 # Choose a command to trigger if a player logs out of combat. Type null to inform that you do not want any commands to be executed
 # 
@@ -41,11 +65,21 @@ Broadcast: true
 # 
 Broadcast Message: '&4<player> &chas disconnected in combat.'
 # 
+# Enable World Guard support in the plugin (prevents players from trigger the tag, in a region without PVP)
+# 
+World Guard: true
+# 
 # Commands enabled during combat
 # 
-Whitelist Commands: 
+Whitelisted Commands: 
 - tell
 - m
 - r
 - msg
 - tag
+- ct
+# 
+# In which worlds to disable this plugin?
+# 
+Disabled Worlds: 
+- worldd
