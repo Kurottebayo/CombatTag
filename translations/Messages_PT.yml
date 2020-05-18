@@ -4,9 +4,9 @@
 #                                By: Kuro                                  #
 #                                                                          #
 ############################################################################
-## Variables: 
-##    - <player>: Return a player's name, can be null if the event is non-related to a player
-##    - <tag-cooldown>: Return the current time of the user tag related to the event. Can be between -1 and the defined tag number in config.yml
+## Variáveis: 
+##    - <player>: Retorna o nome do jogador, pode ser nulo se o evento não for relacionado com um jogador
+##    - <tag-cooldown>: Retorna o tempo atual da tag do jogador se relacionado com o evento. Pode estar entre -1 e pelo tempo definido de tag no config.yml
 Tag: '&7Estás agora em combate durante &c<tag-cooldown> segundos&7!'
 Tag Out: '&aSaiste de combate, podes executar comandos ou sair do servidor em segurança!'
 Tag Command in Combat: '&7Faltam-te &c<tag-cooldown> segundos &7para saires de combate!'
@@ -19,9 +19,12 @@ Reloaded Config: '&aConfiguração recarregada!'
 Reloaded Messages: '&aMensagens recarregadas!'
 Missing Permissions: '&cNão tens permissões suficientes para executar este comando!'
 Only Player: '&cApenas jogadores podem executar este comando!'
+Disabled World: '&cO plugin está desativado no mundo atual.'
+Argument Not Found: '&cO argumento específicado não foi encontrado!'
+Flying in Combat: '&cNão podes voar em combate!'
 Help: 
 - '&6&m---------------------------&r &eCombat Tag &6&m---------------------------&r'
 - '  &eAliases &a/ct'
-- '   &a/combattag reload [<config|messages>] &f- &7Recarrega a configuração, mensagens ou um dos dois'
+- '   &a/combattag reload [<config|messages>] &f- &7Recarrega a configuração, a mensagem ou um dos dois'
 - '   &a/combattag &f- &7Mostra esta mensagem'
 - '&6&m----------------------------------------------------------------&r'

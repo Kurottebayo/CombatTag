@@ -1,0 +1,87 @@
+############################################################################
+#                                                                          #
+#                           Plugin Configuration                           #
+#                                By: Kuro                                  #
+#                                                                          #
+############################################################################
+## Variáveis: 
+##    - <player>: Retorna o nome do jogador, pode ser nulo se o evento não for relacionado com um jogador
+##    - <tag-cooldown>: Retorna o tempo atual da tag do jogador se relacionado com o evento. Pode estar entre -1 e pelo tempo definido de tag no config.yml
+# 
+# Prefixo do Plugin
+# 
+Prefix: '&9CombatTag > '
+# 
+# O tempo necessário para o jogador poder sair do servidor/executar comandos/teleportar-se
+# 
+Cooldown: 15
+# 
+# Permitir que os mobs acionem o tag de um jogador, quando um dos dois infrigir dano ao outro
+# 
+Allow Mob Tag Players: true
+# 
+# Prevenir que um jogador, em um dado gamemode, de acionar a tag para si próprio
+#    - Nodes: CREATIVE, SURVIVAL, ADVENTURE, SPECTATOR, NULL(para desativar esta função)
+# 
+Prevent Gamemode Tag: CREATIVE, SPECTATOR
+# 
+# Não permitir que um jogador comece a voar durante o combate
+# 
+Prevent Fly: true
+# 
+# Desativar o fly durante o combate
+# A diferenteça entre este e o de cima, é que no de cima, o fly após o combate será automaticamente reativado
+# ao contrário deste, que assim que começar o combate será desativado e para reativar, por exemplo, o jogador terá que 
+# usar um comando que o permita ativar o voo para si próprio
+# 
+Disable Fly: false
+# 
+# Permitir usuários com a permissão kuro.combattag.bypass ou kuro.combattag.* para não acionar o block de tag
+# 
+Enable Bypass: false
+# 
+# Cancela um tipo de teleporte específico durante o combate
+#   - Nodes: ENDER_PEARL, PLUGIN, COMMAND, UNKNOWN
+# 
+Cancel Teleport: PLUGIN, COMMAND, ENDER_PEARL
+# 
+# Apenas ativar a tag para o ATTACKER (atacante), VICTIM (vítima) e BOTH (ambos)
+# 
+Only Tag: BOTH
+# 
+# Escolher como o jogador será punido se deslogar durante o combate. Kill e Clear são as ações performáveis
+# 
+Punishment Type: CLEAR
+# 
+# Escolher qual comando será acionado quando o jogador deslogar em combate. Se colocares null, não haverá nenhum comando executado quando o jogador deslogar.
+# em contrapartida, delimita o teu comando por pelica (')
+# 
+Punishment Command: null
+# 
+# Transmitir para todo o servidor que o jogador deslogou em combate?
+# 
+Broadcast: true
+# 
+# Mensagem para transmitir caso o jogador deslogue em combate, e se a opção "Broadcast" for true (verdadeira)
+# 
+Broadcast Message: '&4<player> &chas disconnected in combat.'
+# 
+# Ativa o suporte do World Guard (previne que um jogador acione a tag, uma vez que esteja em uma área sem PVP)
+# 
+World Guard: true
+# 
+# Comandos ativados durante o combate
+# 
+Whitelisted Commands: 
+- tell
+- m
+- r
+- msg
+- tag
+- ct
+# 
+# Em que mundos deverá ser desativado o plugin?
+# 
+Disabled Worlds: 
+- algum mundo aqui
+- e outro mundo aqui
