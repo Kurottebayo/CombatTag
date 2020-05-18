@@ -1,6 +1,8 @@
 #/src/com/main.java
 .idea
 *.iml
+/libraries/WorldEdit.jar
+/libraries/WorldGuard.jar
 
 # Project exclude paths
 /out/
