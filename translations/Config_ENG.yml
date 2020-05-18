@@ -14,7 +14,7 @@ Prefix: '&9CombatTag > '
 # 
 # The required cooldown for the player to log out of the server/execute commands/teleport
 # 
-Cooldown: 8
+Cooldown: 15
 # 
 # Allows mobs to activate the player's tag when one of the two is damaged by the other
 # 
@@ -23,7 +23,7 @@ Allow Mob Tag Players: true
 # Prevent a user in a given gamemode from triggering the tag for himself
 #    - Nodes: CREATIVE, SURVIVAL, ADVENTURE, SPECTATOR, NULL(to disable this function)
 # 
-Prevent Gamemode Tag: SPECTATOR
+Prevent Gamemode Tag: CREATIVE, SPECTATOR
 # 
 # Do not allow the player to fly during combat
 # 
@@ -82,4 +82,5 @@ Whitelisted Commands:
 # In which worlds to disable this plugin?
 # 
 Disabled Worlds: 
-- worldd
+- some world here
+- and another world here
